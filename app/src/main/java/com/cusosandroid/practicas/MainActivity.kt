@@ -53,7 +53,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Nombre() {
 // Estado para guardar el texto ingresado
-    var nombre by remember { mutableStateOf("") }
+    var PrimerN by remember { mutableStateOf("") }
+    var SegundoN by remember { mutableStateOf("") }
+    var textoGenerado by remember { mutableStateOf("") }
+
 
     // Contexto necesario para Toast
     val context = LocalContext.current
@@ -61,25 +64,26 @@ fun Nombre() {
     Column(
         modifier = Modifier
             .fillMaxSize(),
-         //   .padding(16.dp),
-        //horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        //  Row(modifier = Modifier.padding(20.dp,0.dp,0.dp)){
-
-        //    Text("Nombre")
-
-//        }
-
         // Campo de texto
         Row(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 10.dp)) {
             TextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Ingresar Nombre") },
+                value = PrimerN,
+                onValueChange = { PrimerN = it },
+                label = { Text("Ingresar Primer Nombre") },
                 modifier = Modifier.fillMaxWidth()
             )
         }
+        Row(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 10.dp)) {
+            TextField(
+                value = SegundoN,
+                onValueChange = { SegundoN = it },
+                label = { Text("Ingresar Segundo Nombre") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
 
         // Botón
         Row(
@@ -89,8 +93,10 @@ fun Nombre() {
             Button(
                 onClick = {
                     // Crear un TextView personalizado
+                    textoGenerado="$PrimerN $SegundoN"
+
                     val toastText = TextView(context).apply {
-                        text = "Nombre ingresado: $nombre"
+                        text = "Nombre Enviado:$PrimerN $SegundoN"
                         setTextColor(android.graphics.Color.RED) // Texto rojo
                         textSize = 16f
                         setPadding(20, 10, 20, 10)
@@ -110,13 +116,43 @@ fun Nombre() {
             }
         }
 
+        Row(modifier = Modifier.padding(20.dp, 10.dp, 20.dp, 10.dp)) {
+            TextField(
+                value = textoGenerado,
+                onValueChange = { textoGenerado = it },
+                label = { Text("Texto Generado") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        // Botón
+
+
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 20.dp, 0.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Button(
+                onClick = {
+                    textoGenerado = ""// Esto limpia el tercer Textfield
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Red
+                )
+            )
+            {
+                Text(text = "Borrar")
+            }
+        }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PracticasTheme {
-        Nombre()
-    }
-}
+
+
+            @Preview(showBackground = true)
+            @Composable
+            fun GreetingPreview() {
+                PracticasTheme {
+                    Nombre()
+                }
+
+        }
