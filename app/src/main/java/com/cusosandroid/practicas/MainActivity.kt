@@ -1,6 +1,6 @@
 package com.cusosandroid.practicas
 
-import android.R
+import android.R.attr.content
 import android.os.Bundle
 import android.text.Layout
 import android.text.style.BackgroundColorSpan
@@ -10,12 +10,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.expandHorizontally
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,14 +34,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.Ro
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.cusosandroid.practicas.ui.theme.PracticasTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,117 +50,111 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PracticasTheme {
-                Nombre()
-
-                }
+                MainScreen()
             }
+          }
         }
     }
 
-
 @Composable
-fun Nombre() {
-// Estado para guardar el texto ingresado
-    var PrimerN by remember { mutableStateOf("") }
-    var SegundoN by remember { mutableStateOf("") }
-    var textoGenerado by remember { mutableStateOf("") }
-
-
-    // Contexto necesario para Toast
-    val context = LocalContext.current
+fun MainScreen() {
+    var display by remember { mutableStateOf("0") }
+    var operand by remember { mutableStateOf<Double?>(null) }
+    var operation by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // Campo de texto
-        Row(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 10.dp)) {
-            TextField(
-                value = PrimerN,
-                onValueChange = { PrimerN = it },
-                label = { Text("Ingresar Primer Nombre") },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-        Row(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 10.dp)) {
-            TextField(
-                value = SegundoN,
-                onValueChange = { SegundoN = it },
-                label = { Text("Ingresar Segundo Nombre") },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        // Pantalla de resultado
+        Text(
+            text = display,
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            maxLines = 1
+        )
 
-
-        // Botón
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 20.dp, 0.dp),
-            horizontalArrangement = Arrangement.End
+        // Teclado
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Button(
-                onClick = {
-                    // Crear un TextView personalizado
-                    textoGenerado="$PrimerN $SegundoN"
+            val botones = listOf(
+                listOf("7", "8", "9", "/"),
+                listOf("4", "5", "6", "*"),
+                listOf("1", "2", "3", "-"),
+                listOf("0", ".", "C", "+"),
+                listOf("=")
+            )
 
-                    val toastText = TextView(context).apply {
-                        text = "Nombre Enviado:$PrimerN $SegundoN"
-                        setTextColor(android.graphics.Color.RED) // Texto rojo
-                        textSize = 16f
-                        setPadding(20, 10, 20, 10)
+            botones.forEach { fila ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    fila.forEach { label ->
+                        Button(
+                            onClick = {
+                                when (label) {
+                                    in "0".."9", "." -> {
+                                        display =
+                                            if (display == "0" && label != ".") label else display + label
+                                    }
+                                    "C" -> {
+                                        display = "0"
+                                        operand = null
+                                        operation = null
+                                    }
+                                    "+", "-", "*", "/" -> {
+                                        operand = display.toDoubleOrNull()
+                                        operation = label
+                                        display = "0"
+                                    }
+                                    "=" -> {
+                                        val second = display.toDoubleOrNull()
+                                        if (operand != null && second != null && operation != null) {
+                                            display = when (operation) {
+                                                "+" -> (operand!! + second).toString()
+                                                "-" -> (operand!! - second).toString()
+                                                "*" -> (operand!! * second).toString()
+                                                "/" -> if (second == 0.0) "Error" else (operand!! / second).toString()
+                                                else -> display
+                                            }
+                                            operand = null
+                                            operation = null
+                                        }
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(70.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (label in listOf("+", "-", "*", "/", "="))
+                                    Color(0xFF4CAF50) else Color(0xFF2196F3),
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(text = label, fontSize = 22.sp)
+                        }
                     }
-
-                    // Mostrar el Toast con texto personalizado
-                    Toast(context).apply {
-                        duration = Toast.LENGTH_LONG
-                        view = toastText
-                    }.show()
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4CAF50) // Verde
-                )
-            ) {
-                Text(text = "Enviar")
-            }
-        }
-
-        Row(modifier = Modifier.padding(20.dp, 10.dp, 20.dp, 10.dp)) {
-            TextField(
-                value = textoGenerado,
-                onValueChange = { textoGenerado = it },
-                label = { Text("Texto Generado") },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-        // Botón
-
-
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 20.dp, 0.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            Button(
-                onClick = {
-                    textoGenerado = ""// Esto limpia el tercer Textfield
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Red
-                )
-            )
-            {
-                Text(text = "Borrar")
+                }
             }
         }
     }
 }
 
-
-
-            @Preview(showBackground = true)
-            @Composable
+@Preview(showBackground = true)
+@Composable
             fun GreetingPreview() {
                 PracticasTheme {
-                    Nombre()
+                    MainScreen()
                 }
 
         }
