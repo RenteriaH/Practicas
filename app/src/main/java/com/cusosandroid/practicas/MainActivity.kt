@@ -75,7 +75,7 @@ fun MainScreen() {
         modifier = Modifier
             .background(Color.Black)
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(18.dp,50.dp,18.dp,60.dp),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         // ===== Pantallas de resultado =====
@@ -91,7 +91,7 @@ fun MainScreen() {
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .horizontalScroll(scrollHistory)//scroll horizontal
+                    .horizontalScroll(rememberScrollState())//scroll horizontal
                     .padding(4.dp,30.dp,4.dp,4.dp)
             )
 
@@ -105,7 +105,7 @@ fun MainScreen() {
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .horizontalScroll(scrollHistory)//scroll horizontal
+                    .horizontalScroll(rememberScrollState())//scroll horizontal
                     .padding(4.dp)
             )
         }
@@ -133,9 +133,14 @@ fun MainScreen() {
                         Button(
                             onClick = {
                                 when (label) {
-                                    in "0".."9", "." -> {
-                                        display =
-                                            if (display == "0" && label != ".") label else display + label
+                                    in "0".."9"-> {
+                                        display = if (display == "0" && label != ".") label else display + label
+                                    }
+                                    "." -> {
+                                        if(!display.contains(".")){ //Solo agregar si no hay otro
+                                            display += "."
+                                        }
+
                                     }
                                     "C" -> {
                                         display = "0"
@@ -181,8 +186,8 @@ fun MainScreen() {
                             },
                             modifier = Modifier
                                 .weight(1f)
-                                .height(70.dp),
-                            shape = RoundedCornerShape(10.dp),
+                                .height(80.dp),
+                            shape = RoundedCornerShape(30.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = if (label in listOf("+", "-", "*", "/", "="))
                                     Color(0xFFD6850B) else Color(0xFF4F4D4D),
