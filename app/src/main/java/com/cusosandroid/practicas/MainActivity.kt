@@ -2,6 +2,7 @@ package com.cusosandroid.practicas
 
 import android.R.attr.content
 import android.os.Bundle
+import android.text.InputFilter
 import android.text.Layout
 import android.text.style.BackgroundColorSpan
 import android.widget.TextView
@@ -12,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -34,9 +37,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,36 +64,63 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     var display by remember { mutableStateOf("0") }
+    var history by remember { mutableStateOf("") }
+
     var operand by remember { mutableStateOf<Double?>(null) }
     var operation by remember { mutableStateOf<String?>(null) }
+    val scrollHistory= rememberScrollState()
+
 
     Column(
         modifier = Modifier
+            .background(Color.Black)
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        // Pantalla de resultado
-        Text(
-            text = display,
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            maxLines = 1
-        )
+        // ===== Pantallas de resultado =====
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.End
+        ) {
+            // Pantalla de historial (operación en curso)
+            Text(
+                text = history.take(26),
+                fontSize = 60.sp,
+                color = Color.Gray,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollHistory)//scroll horizontal
+                    .padding(4.dp,30.dp,4.dp,4.dp)
+            )
 
-        // Teclado
+            // Pantalla principal (número actual / resultado)
+            Text(
+                text = display.take(13),
+                fontSize = 90.sp,
+                color = Color.White,
+
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollHistory)//scroll horizontal
+                    .padding(4.dp)
+            )
+        }
+
+        // ===== Teclado =====
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             val botones = listOf(
+                listOf("C","⌫"),
                 listOf("7", "8", "9", "/"),
                 listOf("4", "5", "6", "*"),
                 listOf("1", "2", "3", "-"),
-                listOf("0", ".", "C", "+"),
+                listOf("0", ".", "+"),
                 listOf("=")
             )
 
@@ -107,23 +139,39 @@ fun MainScreen() {
                                     }
                                     "C" -> {
                                         display = "0"
+                                        history = ""
                                         operand = null
                                         operation = null
                                     }
                                     "+", "-", "*", "/" -> {
                                         operand = display.toDoubleOrNull()
                                         operation = label
+                                        history = display + " " + label
                                         display = "0"
+                                    }
+                                    "⌫" -> {
+                                        if(display.length>1){
+                                            display=display.dropLast(1)
+                                            if(display.last()=='.') display.dropLast(1)
+                                        }else{
+                                            display="0"
+                                        }
                                     }
                                     "=" -> {
                                         val second = display.toDoubleOrNull()
                                         if (operand != null && second != null && operation != null) {
-                                            display = when (operation) {
-                                                "+" -> (operand!! + second).toString()
-                                                "-" -> (operand!! - second).toString()
-                                                "*" -> (operand!! * second).toString()
-                                                "/" -> if (second == 0.0) "Error" else (operand!! / second).toString()
-                                                else -> display
+                                            val result: Double = when (operation) {
+                                                "+" -> operand!! + second
+                                                "-" -> operand!! - second
+                                                "*" -> operand!! * second
+                                                "/" -> if (second == 0.0) Double.NaN else operand!! / second
+                                                else -> second
+                                            }
+                                            history = history + " " + display + " ="
+                                            display = if (result.isNaN()) "Error" else {
+                                                if (result % 1 == 0.0) result.toInt()
+                                                    .toString() else result.toString()
+
                                             }
                                             operand = null
                                             operation = null
@@ -134,10 +182,10 @@ fun MainScreen() {
                             modifier = Modifier
                                 .weight(1f)
                                 .height(70.dp),
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = if (label in listOf("+", "-", "*", "/", "="))
-                                    Color(0xFF4CAF50) else Color(0xFF2196F3),
+                                    Color(0xFFD6850B) else Color(0xFF4F4D4D),
                                 contentColor = Color.White
                             )
                         ) {
