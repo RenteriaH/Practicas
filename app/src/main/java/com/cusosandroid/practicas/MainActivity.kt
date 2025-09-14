@@ -68,7 +68,8 @@ fun MainScreen() {
 
     var operand by remember { mutableStateOf<Double?>(null) }
     var operation by remember { mutableStateOf<String?>(null) }
-    val scrollHistory= rememberScrollState()
+    var operatorPressed by remember { mutableStateOf(false) }
+    val current = display.toDoubleOrNull() ?: 0.0
 
 
     Column(
@@ -85,7 +86,7 @@ fun MainScreen() {
         ) {
             // Pantalla de historial (operación en curso)
             Text(
-                text = history.take(26),
+                text = history.take(40),
                 fontSize = 60.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.End,
@@ -133,8 +134,15 @@ fun MainScreen() {
                         Button(
                             onClick = {
                                 when (label) {
-                                    in "0".."9"-> {
-                                        display = if (display == "0" && label != ".") label else display + label
+                                    // Al presionar un número
+                                    in "0".."9" -> {
+                                        display = if (display == "0" || operatorPressed) {
+                                            label
+                                        } else {
+                                            display + label
+                                        }
+                                        operatorPressed = false
+
                                     }
                                     "." -> {
                                         if(!display.contains(".")){ //Solo agregar si no hay otro
@@ -149,10 +157,39 @@ fun MainScreen() {
                                         operation = null
                                     }
                                     "+", "-", "*", "/" -> {
-                                        operand = display.toDoubleOrNull()
-                                        operation = label
-                                        history = display + " " + label
-                                        display = "0"
+                                        val second=display.toDoubleOrNull()
+
+                                        if (operand==null) {
+                                            //Primera vez:guardamos el nuemro
+                                            operand =current
+                                        }
+                                      //  if (operand ==null && display != "0"){
+                                        //    operand=second //guardamps solo si el display no es cero
+                                        //}
+
+                                        else if(operation!=null && second !=null){
+                                            //Si ya habia operacion pendiente, acumulamos
+                                            operand =when(operation){
+                                                "+" -> operand!! + current
+                                                "-" -> operand!! - current
+                                                "*" -> operand!! * current
+                                                "/" -> if (current ==0.0) Double.NaN else operand!! / current
+                                                else -> operand
+                                            }
+                                          //  display= operand!!.toString() //Aqui mostramos la suma acumulada en el siplay
+                                        }
+
+                                        //Guardamos la nueva operacion
+                                        operation =label
+                                        //Actualizamos historial (se va acumulando)
+                                        history += " $display $label"
+                                        //display= "0"
+                                        //Mostramos el total acumulado en el display
+                                        display= if (operand!! % 1 == 0.0) operand!!.toInt()
+                                                .toString() else operand!!.toString()
+                                            operatorPressed=true
+
+
                                     }
                                     "⌫" -> {
                                         if(display.length>1){
