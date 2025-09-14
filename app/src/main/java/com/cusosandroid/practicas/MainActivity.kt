@@ -183,7 +183,7 @@ fun MainScreen() {
                                         operation =label
                                         //Actualizamos historial (se va acumulando)
                                         history += " $display $label"
-                                        //display= "0"
+
                                         //Mostramos el total acumulado en el display
                                         display= if (operand!! % 1 == 0.0) operand!!.toInt()
                                                 .toString() else operand!!.toString()
