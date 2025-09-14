@@ -163,8 +163,7 @@ fun MainScreen() {
                                             //Primera vez:guardamos el nuemro
                                             operand =current
                                         }
-                                      //  if (operand ==null && display != "0"){
-                                        //    operand=second //guardamps solo si el display no es cero
+
                                         //}
 
                                         else if(operation!=null && second !=null){
