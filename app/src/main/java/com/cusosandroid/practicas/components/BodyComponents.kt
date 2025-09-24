@@ -9,17 +9,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TextView(texto:String){
-    Text(text = texto,
-        fontSize = 40.sp,
+fun TextView(
+    texto: String,
+    color: Color = Color.Black,
+    fontSize: TextUnit = 40.sp
+) {
+    Text(
+        text = texto,
+        fontSize = fontSize,
         fontWeight = FontWeight.Bold,
-        color = Color.Black,)
+        color = color
+    )
 }
-
 @Composable
 fun Space(espacio:Int){
     Spacer(modifier = Modifier.height(espacio.dp))
