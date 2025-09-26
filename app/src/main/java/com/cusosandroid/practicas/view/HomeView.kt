@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.cusosandroid.practicas.components.TextView
 import com.cusosandroid.practicas.ui.theme.Purple40
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun HomeView(navController: NavHostController) {
@@ -32,7 +33,7 @@ fun HomeView(navController: NavHostController) {
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .clickable { navController.navigate("Conference/Lakers") },
+                .clickable { navController.navigate("ConferenceSelector/Lakers") },
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -60,7 +61,7 @@ fun HomeView(navController: NavHostController) {
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .clickable { navController.navigate("Conference/Knicks") },
+                .clickable { navController.navigate("ConferenceSelector/Knicks") },
                 contentAlignment = Alignment.Center
         ) {
             Image(

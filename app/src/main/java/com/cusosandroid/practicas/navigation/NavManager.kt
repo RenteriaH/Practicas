@@ -38,11 +38,15 @@ fun NavManager() {
 
         // Detalle de una conferencia
         composable(
-            route = "Detail/{conferenceId}",
-            arguments = listOf(navArgument("conferenceId") { type = NavType.IntType })
+            route = "Detail/{team}/{division}",
+            arguments = listOf(
+                navArgument("team") { type = NavType.StringType },
+                navArgument("division") { type = NavType.StringType }
+            )
         ) {
-            val id = it.arguments?.getInt("conferenceId") ?: 0
-            DetailsView(navController, id)
+            val teamArg = it.arguments?.getString("team") ?: ""
+            val divisionArg = it.arguments?.getString("division") ?: ""
+            DetailsView(navController, teamArg, divisionArg)
         }
     }
 }

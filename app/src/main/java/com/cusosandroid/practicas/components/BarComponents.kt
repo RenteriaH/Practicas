@@ -1,15 +1,17 @@
 package com.cusosandroid.practicas.components
 
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -19,13 +21,19 @@ fun TitleBar(name:String){
 }
 
 @Composable
-fun ActionButton(){
-    FloatingActionButton(onClick={},
-        containerColor= Color.Red,
-        contentColor= Color.White
+fun ActionButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier // por defecto vacío
+) {
+    androidx.compose.material3.Button(
+        onClick = onClick,
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .height(56.dp)
     ) {
-        Icon(imageVector = Icons.Default.Add,
-            contentDescription = "Mas")
+        Text(text = text)
     }
 }
 

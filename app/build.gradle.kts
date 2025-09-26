@@ -43,6 +43,9 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:1.3.2")
     implementation("androidx.compose.material3:material3:1.2.0") // o superior
+    implementation("androidx.compose.ui:ui:1.5.0")
+// o la versión estable más reciente
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -55,6 +58,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundation.layout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
