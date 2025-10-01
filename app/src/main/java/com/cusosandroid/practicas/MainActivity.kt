@@ -58,7 +58,7 @@ fun ConferenceSelectorView() {
 fun ConferencePreview() {
     val navController = rememberNavController() // NavController simulado
     PracticasTheme {
-        ConferenceView(navController = navController,"Oeste")
+        ConferenceView(navController = navController,"Los Ageles Lakers","Oeste")
     }
 }
 @Preview(showBackground = true)

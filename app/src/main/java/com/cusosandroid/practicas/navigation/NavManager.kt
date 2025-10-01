@@ -8,10 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.cusosandroid.practicas.view.ConferenceSelectorView
 import com.cusosandroid.practicas.view.ConferenceView
 import com.cusosandroid.practicas.view.HomeView
 import com.cusosandroid.practicas.view.DetailsView
-
 @Composable
 fun NavManager() {
     val navController = rememberNavController()
@@ -27,16 +27,29 @@ fun NavManager() {
             HomeView(navController)
         }
 
-        // Conferencias según el equipo
+// Selector de Conferencia (Este/Oeste)
         composable(
-            route = "Conference/{team}",
+            route = "ConferenceSelector/{team}",
             arguments = listOf(navArgument("team") { type = NavType.StringType })
         ) {
             val team = it.arguments?.getString("team") ?: ""
-            ConferenceView(navController, team)
+            ConferenceSelectorView(navController, team)
         }
 
-        // Detalle de una conferencia
+        // Vista de Conferencia (divisiones)
+        composable(
+            route = "Conference/{team}/{conference}",
+            arguments = listOf(
+                navArgument("team") { type = NavType.StringType },
+                navArgument("conference") { type = NavType.StringType }
+            )
+        ) {
+            val team = it.arguments?.getString("team") ?: ""
+            val conference = it.arguments?.getString("conference") ?: ""
+            ConferenceView(navController, team,conference)
+        }
+
+        // Vista de Detalles (equipo + división)
         composable(
             route = "Detail/{team}/{division}",
             arguments = listOf(
@@ -44,10 +57,12 @@ fun NavManager() {
                 navArgument("division") { type = NavType.StringType }
             )
         ) {
-            val teamArg = it.arguments?.getString("team") ?: ""
-            val divisionArg = it.arguments?.getString("division") ?: ""
-            DetailsView(navController, teamArg, divisionArg)
+            val team = it.arguments?.getString("team") ?: ""
+            val division = it.arguments?.getString("division") ?: ""
+            DetailsView(navController, team, division)
         }
+
+
     }
 }
 
