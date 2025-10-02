@@ -197,14 +197,14 @@ fun ConferenceView(navController: NavHostController, team: String, conferencia: 
                     colors = listOf(currentTeamSecondaryColor, textOnPrimary)
                 )
                 Text(
-                    text = "Selecciona una division",
+                    text = "SELECCIONA UNA DIVISION",
                     // Aplicamos un TextStyle que contiene el degradado
                     style = TextStyle(
                         brush = gradientBrush, // Usamos el Brush que creamos
-                        fontSize = 32.sp,
+                        fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
-                        lineHeight = 36.sp
+                        lineHeight = 32.sp
                     ),
                     // Se elimina el parámetro 'color' porque el Brush lo reemplaza.
                     modifier = Modifier

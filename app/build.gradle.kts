@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom)) // BOM controla versiones
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Compose core
     implementation(libs.androidx.compose.ui)
