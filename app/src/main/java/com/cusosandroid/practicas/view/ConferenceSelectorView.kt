@@ -21,9 +21,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -84,10 +86,10 @@ fun ConferenceSelectorView(navController: NavHostController, team: String) {
     }
 
     // ... (lógica de imágenes sin cambios) ...
-    val oesteLakersImage = R.drawable.oestelackers
-    val esteLakersImage = R.drawable.oestelackers
-    val oesteKnicksImage = R.drawable.oestelackers
-    val esteKnicksImage = R.drawable.oestelackers
+    val oesteLakersImage = R.drawable.los_angeles_lakers_conferencia_oeste
+    val esteLakersImage = R.drawable.los_angeles_lakers_conferencia_este
+    val oesteKnicksImage = R.drawable.new_york_knicks_conferencia_oeste
+    val esteKnicksImage = R.drawable.new_york_knicks_conferencia_este
     val defaultConferenceImage = R.drawable.oestelackers
 
     val imagenParaConferenciaOeste = when (team) {
@@ -136,8 +138,6 @@ fun ConferenceSelectorView(navController: NavHostController, team: String) {
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = currentTeamPrimaryColor,
-                    titleContentColor = textOnPrimary,
-                    navigationIconContentColor = textOnPrimary
                 )
             )
         }
@@ -154,16 +154,23 @@ fun ConferenceSelectorView(navController: NavHostController, team: String) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top // Mantenemos el contenido principal arriba
             ) {
+                // --- TÍTULO PRINCIPAL CON DEGRADADO ---
+                val gradientBrush = Brush.verticalGradient(
+                    colors = listOf(currentTeamSecondaryColor, textOnPrimary)
+                )
                 Text(
                     text = "Conferencia para\n$teamFullName",
-                    color = textOnPrimary,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
+                    // 1. Aplicamos un TextStyle que contiene el degradado
+                    style = TextStyle(
+                        brush = gradientBrush, // El Brush que ya tienes definido
+                        fontSize = 32.sp,      // Vamos a darle un tamaño de fuente explícito
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 36.sp     // Un poco más de altura de línea para que no se vea apretado
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 0.dp, bottom = 16.dp), // Ajustado para subir
-                    lineHeight = 30.sp
+                        .padding(top = 8.dp, bottom = 16.dp)
                 )
 
                 ConferenceButton(

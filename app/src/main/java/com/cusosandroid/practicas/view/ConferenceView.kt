@@ -18,9 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cusosandroid.practicas.R
+import com.cusosandroid.practicas.components.DivisionButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,11 +64,13 @@ fun ConferenceView(navController: NavHostController, team: String, conferencia: 
             currentTeamSecondaryColor = lakersSecondary
             currentTextOnSecondaryColor = lakersTextOnSecondary
         }
+
         "Knicks" -> {
             currentTeamPrimaryColor = knicksPrimary
             currentTeamSecondaryColor = knicksSecondary
             currentTextOnSecondaryColor = knicksTextOnSecondary
         }
+
         else -> {
             currentTeamPrimaryColor = Color(0xFF607D8B)
             currentTeamSecondaryColor = Color(0xFFB0BEC5)
@@ -104,19 +109,49 @@ fun ConferenceView(navController: NavHostController, team: String, conferencia: 
         else -> emptyList()
     }
 
-    val conferenceImagesMap = mapOf(
-        "Oeste" to listOf(
-            R.drawable.lakerspacifico,
-            R.drawable.lakersnoroeste,
-            R.drawable.lakerssuroeste
+    // --- Lógica de Selección de Imágenes (ACTUALIZADA) ---
+
+    // 1. Definimos TODAS las posibles imágenes por equipo y conferencia
+    val allTeamImages = mapOf(
+        "Lakers" to mapOf(
+            "Este" to listOf(
+                R.drawable.lakersatlantico,
+                R.drawable.lakerscentral,
+                R.drawable.lakerssudeste
+            ),
+            "Oeste" to listOf(
+                R.drawable.lakerspacifico,
+                R.drawable.lakersnoroeste,
+                R.drawable.lakerssuroeste
+            )
         ),
-        "Este" to listOf(
-            R.drawable.lakersatlantico,
-            R.drawable.lakerscentral,
-            R.drawable.lakerssudeste
+        "Knicks" to mapOf(
+            "Este" to listOf(
+                // ¡Asegúrate de que los nombres coincidan con los archivos que agregaste!
+                R.drawable.new_york_knicks_division_atlantico,
+                R.drawable.new_york_knicks_division_central,
+                R.drawable.new_york_knicks_division_sudeste
+            ),
+            "Oeste" to listOf(
+                R.drawable.new_york_knicks_division_pacifico,
+                R.drawable.new_york_knicks_division_noroeste1,
+                R.drawable.new_york_knicks_division_suroeste
+            )
         )
+        // Puedes añadir más equipos aquí en el futuro
+        // "Bulls" to mapOf(...)
     )
-    val divisionImages = conferenceImagesMap[conferencia] ?: emptyList()
+
+    // 2. Seleccionamos la lista de imágenes correcta basándonos
+    //    en el equipo actual (shortTeamName) y la conferencia.
+    val divisionImages = allTeamImages[shortTeamName]?.get(conferencia) ?: listOf(
+        // Lista de imágenes por defecto si no se encuentra el equipo/conferencia
+        R.drawable.lakerss, // Una imagen genérica
+        R.drawable.lakerss,
+        R.drawable.lakerss
+    )
+
+
 
     Scaffold(
         topBar = {
@@ -151,20 +186,29 @@ fun ConferenceView(navController: NavHostController, team: String, conferencia: 
                     .padding(paddingValues) // Padding de la TopAppBar
                     .fillMaxSize()
                     // Padding inferior para dejar espacio al Card parpadeante
-                    .padding(bottom = blinkingCardPaddingBottom + 40.dp) // Ajusta el 50.dp
+                   // .padding(bottom = blinkingCardPaddingBottom + 40.dp) // Ajusta el 50.dp
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+
+                // --- TÍTULO PRINCIPAL CON DEGRADADO ---
+                val gradientBrush = Brush.verticalGradient(
+                    colors = listOf(currentTeamSecondaryColor, textOnPrimary)
+                )
                 Text(
-                    text = "Selecciona una división",
-                    color = textOnPrimary,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
+                    text = "Selecciona una division",
+                    // Aplicamos un TextStyle que contiene el degradado
+                    style = TextStyle(
+                        brush = gradientBrush, // Usamos el Brush que creamos
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 36.sp
+                    ),
+                    // Se elimina el parámetro 'color' porque el Brush lo reemplaza.
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 0.dp, bottom = 16.dp)
+                        .weight(1f)
                 )
 
                 if (divisions.isNotEmpty()) {
@@ -180,102 +224,18 @@ fun ConferenceView(navController: NavHostController, team: String, conferencia: 
                                 navController.navigate("Detail/$team/$division")
                             },
                             // Altura ajustada para los botones de división
-                            modifier = Modifier.height(210.dp) // Reducimos un poco para más espacio abajo
+                            modifier = Modifier.height(230.dp) // Reducimos un poco para más espacio abajo
                         )
                         if (index < divisions.size - 1) {
                             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre botones ajustado
                         }
                     }
-                } else {
-                    Text(
-                        text = "No hay divisiones disponibles para esta conferencia.",
-                        color = textOnPrimary,
-                        modifier = Modifier.padding(16.dp)
-                    )
                 }
-                // El Spacer con weight(1f) se elimina o se ajusta si queremos que el Card esté siempre visible
-                // Si el contenido es corto, este Spacer empujaría el Card parpadeante hacia abajo (lo cual es bueno)
-                // Si el contenido + el Card ya llenan la pantalla, este Spacer no tendrá mucho efecto visible.
-                Spacer(modifier = Modifier.weight(1f)) // Para empujar el contenido hacia arriba y el Card al fondo
-            } // Fin de la Column de contenido principal
-
-            // Card parpadeante
-            Card(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = blinkingCardPaddingBottom
-                    )
-                    .alpha(animatedBlinkAlpha),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = blinkingCardBackgroundColor)
-            ) {
-                Text(
-                    text = blinkingMessage,
-                    color = blinkingCardTextColor,
-                    fontSize = blinkingCardFontSize,
-                    fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(
-                            horizontal = blinkingCardInternalHorizontalPadding,
-                            vertical = blinkingCardInternalVerticalPadding
-                        )
-                        .fillMaxWidth()
-                )
             }
         }
     }
 }
 
-@Composable
-fun DivisionButton(
-    text: String,
-    backgroundImageRes: Int,
-    buttonColor: Color,
-    textColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier // Aceptamos un modifier que incluye la altura
-) {
-    Card(
-        modifier = modifier // Aplicamos el modifier aquí
-            // .height(230.dp) // La altura ahora se pasa desde la llamada
-            .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(id = backgroundImageRes),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.75f)
-                    .align(Alignment.TopCenter)
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.30f)
-                    .background(buttonColor)
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = text,
-                    color = textColor,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    }
-}
+
+
+
