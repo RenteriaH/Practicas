@@ -150,9 +150,6 @@ fun ConferenceView(navController: NavHostController, team: String, conferencia: 
         R.drawable.lakerss,
         R.drawable.lakerss
     )
-
-
-
     Scaffold(
         topBar = {
             TopAppBar(
