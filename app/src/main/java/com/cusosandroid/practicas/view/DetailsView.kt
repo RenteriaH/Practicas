@@ -1,5 +1,3 @@
-//import androidx.compose.foundation.gestures.forEach
-//import androidx.preference.isNotEmpty
 
 package com.cusosandroid.practicas.view
 
@@ -8,40 +6,26 @@ import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
 import com.cusosandroid.practicas.R
 import com.cusosandroid.practicas.components.ImageGallery
 import com.cusosandroid.practicas.components.KeyStatsRow
@@ -205,11 +189,7 @@ fun DetailsView(navController: NavHostController, team: String, division: String
             }
         }
     }
-
 }
-
-
-
 
     // --- FUNCIÓN DE DATOS (AQUÍ DEBES AÑADIR TUS ESTADÍSTICAS Y VIDEOS) ---
     fun getTeamDivisionInfo(team: String, division: String): DivisionInfo {
@@ -419,7 +399,7 @@ fun DetailsView(navController: NavHostController, team: String, division: String
                     - Toronto Raptors: Un rival divisional duro, especialmente desde su campeonato en 2019.
                 """.trimIndent()
                 ),
-                images = listOf(placeholder, placeholder, placeholder),
+                images = listOf(R.drawable.knicks_atlantico1, R.drawable.knicks_atlantico3, R.drawable.knicks_atlantico4,R.drawable.knicks_atlantico5),
                 keyStats = listOf(
                     "Títulos Div." to "5",
                     "vs Celtics" to "208-299",
@@ -441,7 +421,7 @@ fun DetailsView(navController: NavHostController, team: String, division: String
                     - Detroit Pistons: Los "Bad Boys" de Detroit también fueron un rival duro en los 80 y principios de los 90.
                 """.trimIndent()
                 ),
-                images = listOf(placeholder, placeholder, placeholder),
+                images = listOf(R.drawable.knicks_central1, R.drawable.knicks_central2, R.drawable.knicks_central3,R.drawable.knicks_central4,R.drawable.knicks_central5,R.drawable.knicks_central6),
                 keyStats = listOf(
                     "Rivalidad 90s" to "Pacers",
                     "Obstáculo" to "Bulls de MJ",
@@ -460,7 +440,7 @@ fun DetailsView(navController: NavHostController, team: String, division: String
                     "La Rivalidad con Miami Heat" to "Una rivalidad que explotó en los 90 cuando Pat Riley se fue a Miami. Las series de playoffs entre Knicks y Heat en esa década fueron increíblemente físicas y hostiles.",
                     "Otras Interacciones" to "Duelos interesantes contra el Magic de Shaq/Penny en los 90. Partidos de conferencia importantes contra Hawks, Wizards y Hornets."
                 ),
-                images = listOf(placeholder, placeholder),
+                images = listOf(R.drawable.knicks_sudeste3, R.drawable.knicks_sudeste4,R.drawable.knicks_sudeste5,R.drawable.knicks_sudeste6),
                 keyStats = listOf(
                     "vs Heat" to "70-66",
                     "Playoffs 90s" to "Batallas",
@@ -489,7 +469,7 @@ fun DetailsView(navController: NavHostController, team: String, division: String
                     Generalmente, para competir contra la División Pacífico, los Knicks deben imponer su ritmo, controlar la pintura y ser extremadamente disciplinados en la defensa del perímetro. Evitar que equipos como los Warriors o los Suns entren en racha de triples es fundamental, al igual que contener las transiciones rápidas de equipos como los Kings.
                 """.trimIndent()
                 ),
-                images = listOf(placeholder, placeholder),
+                images = listOf(R.drawable.knicks_pacifico2, R.drawable.knicks_pacifico3,R.drawable.knicks_pacifico4,R.drawable.knicks_pacifico5,R.drawable.knicks_pacifico6),
                 keyStats = listOf(
                     "vs Lakers" to "147-150",
                     "Finales '73" to "NYK 4-1",
@@ -516,7 +496,7 @@ fun DetailsView(navController: NavHostController, team: String, division: String
                     La gira por la División Noroeste es logísticamente complicada. Jugar a casi 1.600 metros de altitud en Denver y a unos 1.300 metros en Salt Lake City supone un reto físico real que afecta a la resistencia de los jugadores. Los equipos deben planificar cuidadosamente los viajes y la aclimatación para no verse en desventaja. Además, las aficiones de Portland y Oklahoma City son conocidas por crear ambientes muy hostiles para los equipos visitantes.
                 """.trimIndent()
                 ),
-                images = listOf(placeholder, placeholder),
+                images = listOf(R.drawable.knicks_noroeste2, R.drawable.knicks_noroeste3,R.drawable.knicks_noroeste4,R.drawable.knicks_noroeste6),
                 keyStats = listOf(
                     "Carmelo" to "NYK & DEN",
                     "Mitchell" to "Nativo de NY",
@@ -545,7 +525,7 @@ fun DetailsView(navController: NavHostController, team: String, division: String
                     - New Orleans Pelicans: Con jugadores como Zion Williamson, los Pelicans presentan un desafío físico único en la pintura. Para los Knicks, es una prueba para su defensa interior y su capacidad para controlar los rebotes contra uno de los jugadores más potentes de la liga.
                 """.trimIndent()
                 ),
-                images = listOf(placeholder, placeholder),
+                images = listOf(R.drawable.knicks_suroeste1, R.drawable.knicks_suroeste2,R.drawable.knicks_suroeste3,R.drawable.knicks_suroeste4,R.drawable.knicks_suroeste5,R.drawable.knicks_suroeste6,R.drawable.knicks_suroeste7),
                 keyStats = listOf(
                     "Finales '99" to "SAS 4-1",
                     "vs Mavs" to "Porziņģis",

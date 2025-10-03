@@ -120,7 +120,7 @@ fun ConferenceView(navController: NavHostController, team: String, conferencia: 
                 R.drawable.lakerssudeste
             ),
             "Oeste" to listOf(
-                R.drawable.lakerspacifico,
+                R.drawable.lakers1212,
                 R.drawable.lakersnoroeste,
                 R.drawable.lakerssuroeste
             )
